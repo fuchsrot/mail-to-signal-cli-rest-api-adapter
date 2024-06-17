@@ -1,0 +1,30 @@
+{
+  "name": "mail-to-signal-cli-rest-api-adapter",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon",
+    "format": "prettier ./src --write"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/async": "^3.2.24",
+    "@types/imap": "^0.8.19",
+    "@types/mailparser": "^3.4.4",
+    "@types/node": "^20.14.2",
+    "nodemon": "^3.1.3",
+    "prettier": "^3.3.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "async": "^3.2.5",
+    "dotenv": "^16.4.5",
+    "imap": "^0.8.19",
+    "mailparser": "^3.7.1"
+  }
+}

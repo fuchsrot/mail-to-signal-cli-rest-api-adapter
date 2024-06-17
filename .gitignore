@@ -1,0 +1,5 @@
+upload
+node_modules
+dist
+node_modules.tar.gz
+.env
