@@ -4,6 +4,9 @@ import { MailListener } from "./mail-server";
 import { sendMessage } from "./signal-cli-rest-api-client";
 import { routeEmail } from "./message-router";
 import { Email } from "./model";
+import logger from "./logger";
+
+logger.info("startup application");
 
 var mailListener = new MailListener({
   mailbox: "INBOX",
@@ -22,44 +25,32 @@ var mailListener = new MailListener({
 mailListener.start();
 
 mailListener.on("server:connected", function () {
-  console.log("imapConnected");
+  logger.info("imap server is connected");
 });
 
 mailListener.on("mail", function (parsedMail: ParsedMail) {
-  const email: Email = {
-    from: parsedMail.from!.value[0].address!,
-    text: parsedMail.text!,
-    subject: parsedMail.subject || "",
-    html: parsedMail.html ? parsedMail.html : undefined
-  };
-  const sendRequest = routeEmail(email);
-  sendMessage(sendRequest);
-});
-
-mailListener.on("mailbox", function (mailbox) {
-  console.log("Total number of mails: ", mailbox.messages.total); // this field in mailbox gives the total number of emails
+  logger.info("received mail event");
+  try {
+    const email: Email = {
+      from: parsedMail.from!.value[0].address!,
+      text: parsedMail.text!,
+      subject: parsedMail.subject || "",
+      html: parsedMail.html ? parsedMail.html : undefined,
+    };
+    logger.info(
+      `mail data - from: ${email.from}, subject: ${email.subject}, text-length: ${email.text.length}, html: ${!!email.html}`,
+    );
+    const sendRequest = routeEmail(email);
+    sendMessage(sendRequest);
+  } catch (e) {
+    logger.error("error while received email was processed", e);
+  }
 });
 
 mailListener.on("server:disconnected", function () {
-  console.log("imapDisconnected");
+  logger.info("imap server is disconnected");
 });
 
 mailListener.on("error", function (err) {
-  console.log(err);
-});
-
-mailListener.on("headers", function (headers, seqno) {
-  // do something with mail headers
-});
-
-mailListener.on("body", function (body, seqno) {
-  // do something with mail body
-});
-
-mailListener.on("attachment", function (attachment, path, seqno) {
-  // do something with attachment
-});
-
-mailListener.on("mail", function (mail, seqno) {
-  // do something with the whole email as a single object
+  logger.error(err);
 });

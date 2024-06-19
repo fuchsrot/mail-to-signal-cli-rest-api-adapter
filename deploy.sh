@@ -14,7 +14,7 @@ ssh uberspace <<EOF
      cd apps/mail-to-signal-cli-rest-api-adapter
 EOF
 
-find ./dist -type f -name "*.js" | while read -r file; do
+find ./dist/src -type f -name "*.js" | while read -r file; do
      echo "put $file" >> upload
 done
 

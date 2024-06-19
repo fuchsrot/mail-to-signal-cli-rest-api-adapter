@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "npx tsc",
-    "start": "node dist/index.js",
+    "start": "node dist/src/index.js",
     "dev": "nodemon",
     "test": "vitest",
     "format": "prettier ./src --write"
@@ -27,6 +27,7 @@
     "async": "^3.2.5",
     "dotenv": "^16.4.5",
     "imap": "^0.8.19",
-    "mailparser": "^3.7.1"
+    "mailparser": "^3.7.1",
+    "winston": "^3.13.0"
   }
 }

@@ -1,16 +1,13 @@
 import https from "https";
 import { SendRequest } from "./model";
+import logger from "./logger";
 
-const host = process.env.SIGNAL_CLI_REST_API_HOST!
-const number = process.env.SIGNAL_CLI_REST_API_NUMBER!
-const user = process.env.SIGNAL_CLI_REST_API_USER!
-const userPass = process.env.SIGNAL_CLI_REST_API_PASS!
+const host = process.env.SIGNAL_CLI_REST_API_HOST!;
+const number = process.env.SIGNAL_CLI_REST_API_NUMBER!;
+const user = process.env.SIGNAL_CLI_REST_API_USER!;
+const userPass = process.env.SIGNAL_CLI_REST_API_PASS!;
 
-const pass = Buffer.from(
-  user + ":" + userPass,
-).toString("base64");
-
-console.log(pass);
+const pass = Buffer.from(user + ":" + userPass).toString("base64");
 
 export interface Payload {
   base64_attachments?: string[];
@@ -48,17 +45,15 @@ export const sendMessage = (sendRequest: SendRequest) => {
       "Content-Length": Buffer.byteLength(body),
     },
   };
-  const request = https
-    .request(reqOptions, (res) => {
-      console.log("statusCode:", res.statusCode);
+  const request = https.request(reqOptions, (res) => {
+    logger.info(
+      `send api request - path: '/v2/send', content-length: ${Buffer.byteLength(body)}, statusCode: ${res.statusCode}`,
+    );
 
-      res.on("data", (d) => {
-        process.stdout.write(d);
-      });
-    })
-    .on("error", (err) => {
-      console.log("Error: " + err.message);
+    res.on("data", (data) => {
+      logger.info(`send api request - path: '/v2/send' - response: ${data}`);
     });
+  });
   request.write(body);
   request.end();
 };
